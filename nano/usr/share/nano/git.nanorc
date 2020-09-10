@@ -1,0 +1,115 @@
+# This code is free software; you can redistribute it and/or modify it under
+# the terms of the new BSD License.
+#
+# Copyright (c) 2010, Sebastian Staud
+# Copyright (c) 2020, Jaakko Kantojärvi
+
+# A nano configuration file to enable syntax highlighting of some Git specific
+# files with the GNU nano text editor (http://www.nano-editor.org)
+
+
+## This syntax format is used for git config files
+syntax "git-config" "git(config|modules)$|\.git/config$"
+
+color brightcyan "\<(true|false)\>"
+color cyan "^[[:space:]]*[^=]*="
+color brightmagenta "^[[:space:]]*\[.*\]$"
+color yellow ""(\\.|[^"])*"|'(\\.|[^'])*'"
+color brightblack "(^|[[:space:]]+)#([^{].*)?$"
+color ,green "[[:space:]]+$"
+
+
+## This syntax format is used for commit (and tag) messages
+syntax "git-commit" "COMMIT_EDITMSG|TAG_EDITMSG"
+
+# Commit message
+#color yellow ".*"
+# Warn when a commit message exceeds 50 and 72 chars per line
+#color brightyellow "^(.{1,50})$"
+color brightwhite "^(.{1,50})$"
+color yellow "^(.{51}).*$"
+color red "^(.{73}).*$"
+
+# Headers in the end of the message:
+color white         "^[A-Za-z_-]+: .*$"
+color brightblue    "^[A-Za-z_-]+: "
+color brightgreen   "^([Cc]lose[sd]?|[Ff]ixe[sd]|[Rr]esolve[sd]?) ((#|GH-)[0-9]+|https?://[^ ]*)$"
+color green         "^([Cc]lose[sd]?|[Ff]ixe[sd]|[Rr]esolve[sd]?)"
+
+# Comments
+color brightblack "^#.*"
+
+# Branch status
+color brightmagenta "^# [A-Za-z]+[^:]*:$"
+color brightred   "^#[[:space:]]Your branch and '[^']+"
+color brightblack "^#[[:space:]]Your branch and '"
+color brightwhite "^#[[:space:]]On branch [^ ]+"
+color brightblack "^#[[:space:]]On branch "
+color brightwhite "^#[[:space:]]Your branch is up to date with '[^']+"
+color brightblack "^#[[:space:]]Your branch is up to date with '"
+
+# Files changes
+color white       "#[[:space:]](deleted|modified|new file|renamed):[[:space:]].*"
+color red         "#[[:space:]]deleted:"
+color green       "#[[:space:]]modified:"
+color brightgreen "#[[:space:]]new file:"
+color brightblue  "#[[:space:]]renamed:"
+
+# Untracked filenames
+color white "^#	[^?*:;{}\\]+(/|\.?[^/?*:;{}\\]+)$"
+
+# Rebase actions:
+color brightyellow  "^# interactive rebase in progress.*"
+color yellow        "^#[[:space:]]+(pick|reword|edit|squash|fixup|exec|break|drop|label|reset|merge) .*"
+color brightwhite   "^#[[:space:]]+(pick|reword|edit|squash|fixup|exec|break|drop|label|reset|merge)"
+
+# Commit IDs
+color brightblue "[0-9a-f]{7,40}"
+
+# Recolor hash symbols
+color brightblack "^#"
+
+# Trailing spaces (+LINT is not ok, git uses tabs)
+color ,red "[[:space:]]+$"
+
+
+## This syntax format is used for interactive rebasing
+syntax "git-rebase-todo" "git-rebase-todo"
+
+# Default
+color yellow ".*"
+
+# Comments
+color brightblack "^#.*"
+
+# Rebase commands
+color green         "^(e|edit) [0-9a-f]{7,40}"
+color green         "^# e, edit"
+color brightgreen   "^(f|fixup) [0-9a-f]{7,40}"
+color brightgreen   "^# f, fixup"
+color brightwhite   "^(p|pick) [0-9a-f]{7,40}"
+color brightwhite   "^# p, pick"
+color blue          "^(r|reword) [0-9a-f]{7,40}"
+color blue          "^# r, reword"
+color brightred     "^(s|squash) [0-9a-f]{7,40}"
+color brightred     "^# s, squash"
+color brightblue    "^(m|merge) (-[Cc] [0-9a-f]{7,40}|[^ ]+)"
+color brightred     "^(m|merge) "
+color brightred     "^# m, merge"
+color red           "^(d|drop) [0-9a-f]{7,40}"
+color red           "^# d, drop"
+color white         "^(x|exec)[[:space:]]+[^ ]+.*$"
+color brightyellow  "^(x|exec) "
+color brightyellow  "^# x, exec"
+color white         "^(b|break)"
+color white         "^# b, break"
+color brightblue    "^(l|r|label|reset) [^ ]+"
+color white         "^(l|r|label|reset) "
+color white         "^# l, label"
+color white         "^# t, reset"
+
+# Commit IDs
+color brightblue "[0-9a-f]{7,40}"
+
+# Recolor hash symbols
+color brightblack "^#"

@@ -9,3 +9,17 @@ Standards-Version: 4.5.0
 Homepage: https://github.com/raphendyr/debian-blend-n-1.fi-configs
 Vcs-Browser: https://github.com/raphendyr/debian-blend-n-1.fi-configs
 Vcs-Git: https://github.com/raphendyr/debian-blend-n-1.fi-configs.git
+
+
+Package: blend-n-1.fi-config-nano
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}
+Suggests: nano
+Provides: ${diverted-files}
+Conflicts: ${diverted-files}
+Description: Debian Blend by n-1.fi - nano configuration
+ This package establishes default configurations for the nano.
+ .
+ Debian Pure Blend by n-1.fi is a subset of Debian designed to
+ meet basic expectations.
