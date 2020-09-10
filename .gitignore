@@ -1,0 +1,7 @@
+/debian/*.debhelper
+/debian/*.debhelper.log
+/debian/*.substvars
+/debian/.debhelper/
+/debian/blend-n-1.fi-*/
+/debian/debhelper-build-stamp
+/debian/files
