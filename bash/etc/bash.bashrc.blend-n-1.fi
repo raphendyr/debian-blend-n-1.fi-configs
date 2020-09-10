@@ -1,0 +1,132 @@
+# System-wide .bashrc file for interactive bash(1) shells.
+
+# To enable the settings / commands in this file for login shells as well,
+# this file has to be sourced in /etc/profile.
+
+# If not running interactively, don't do anything
+[ "$PS1" ] || return
+
+# store temporary files in XDG_CACHE_HOME
+BASH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/bash"
+[ -d "$BASH_CACHE_DIR" ] || mkdir -m 0700 -p "$BASH_CACHE_DIR"
+
+# history
+HISTCONTROL=ignoredups
+HISTFILE="$BASH_CACHE_DIR/bash_history"
+HISTSIZE=10000
+HISTFILESIZE=100000
+shopt -s histappend
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+
+# define dynamic prompt
+
+# - check color support
+export NO_COLOR=yes
+case "$TERM" in
+	# TERM can indicate a color support
+	xterm-color|*-256color) unset NO_COLOR ;;
+	# If not, we can try to test with tput. If it works, assume color
+	# support is compliant with Ecma-48 (ISO/IEC-6429).
+	*) [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null && unset NO_COLOR ;;
+esac
+
+# - red for root, green for normal user
+if [[ $NO_COLOR ]]; then
+	# $user @ $host :
+	__build_prompt_pre='\u@\h:'
+elif [[ $EUID == 0 ]]; then
+	# red $host res :
+	__build_prompt_pre='\[\e[0;31m\]\h\[\e[0m\]:'
+else
+	# green $user res @ green $host res :
+	__build_prompt_pre='\[\e[0;32m\]\u\[\e[0m\]@\[\e[0;32m\]\h\[\e[0m\]:'
+fi
+
+# - shorten SPWD
+if which spwd >/dev/null; then
+	if [[ $NO_COLOR ]]; then
+		__build_prompt_init() { PS1="$__build_prompt_pre$(spwd)"; }
+	else
+		# $ps1 cyan $(spwd) res
+		__build_prompt_init() { PS1="$__build_prompt_pre\[\e[0;36m\]$(spwd)\[\e[0m\]"; }
+	fi
+else
+	if [[ $NO_COLOR ]]; then
+		__build_prompt_pre+='\w'
+	else
+		# $ps1 cyan $PWD res
+		__build_prompt_pre+='\[\e[0;36m\]\w\[\e[0m\]'
+	fi
+	__build_prompt_init() { PS1=$__build_prompt_pre; }
+	PROMPT_DIRTRIM=4
+fi
+
+# - add debian_chroot
+if [ -r "/etc/debian_chroot" -a -s "/etc/debian_chroot" ]; then
+	if [[ $NO_COLOR ]]; then
+		# ( $/etc/debian_chroot_chroot ) $ps1
+		__build_prompt_pre="($(cat /etc/debian_chroot))$__build_prompt_pre"
+	else
+		# yellow ( $/etc/debian_chroot_chroot ) res $ps1
+		__build_prompt_pre="(\[\e[0;33m\]$(cat /etc/debian_chroot)\[\e[0m\])$__build_prompt_pre"
+	fi
+fi
+
+# - handle exit code
+if [[ $NO_COLOR ]]; then
+	__build_prompt() {
+		local _exit=$? # store exit code of the last command
+		__build_prompt_init
+		[[ $_exit != 0 ]] && PS1+=" $_exit "
+		PS1+='\$ '
+	}
+else
+	__build_prompt() {
+		local _exit=$? # store exit code of the last command
+		__build_prompt_init
+		# $PS1 light-red $? res
+		[[ $_exit != 0 ]] && PS1+=" \[\e[01;31m\]$_exit\[\e[0m\] "
+		PS1+='\$ '
+	}
+fi
+
+# - add the "hook"
+[[ "$PROMPT_COMMAND" = "${PROMPT_COMMAND#*__build_prompt}" ]] \
+	&& PROMPT_COMMAND="__build_prompt${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
+
+# PS2..PS4
+if [[ $NO_COLOR ]]; then
+	PS2='> '
+	PS3='?# '
+	PS4='+ '
+else
+	PS2='\[\e[01;35m\]>\[\e[0m\] ' # magenta > res
+	PS3='\[\e[01;35m\]?\[\e[0m\]# ' # magenta ? res #
+	PS4='\[\e[01;30m\]+\[\e[0m\] ' # light-black + res
+fi
+
+
+# dircolors
+if ! [[ $NO_COLOR ]] && which dircolors >/dev/null; then
+	[ -r "$HOME/.dircolors" ] \
+		&& eval "$(dircolors -b "$HOME/.dircolors")" \
+		|| eval "$(dircolors -b)"
+	alias ls='ls --color=auto'
+fi
+
+
+# aliases
+if [ -r "$HOME/.bash_aliases" ]; then
+	. "$HOME/.bash_aliases"
+elif [ -r "$HOME/.aliases" ]; then
+	. "$HOME/.aliases"
+fi
+
+# set exit 0 for prompt
+true
+
+# vim: set ts=4 sw=4 tw=0 noet syntax=bash filetype=bash :

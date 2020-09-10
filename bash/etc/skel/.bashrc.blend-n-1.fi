@@ -1,0 +1,16 @@
+# ~/.bashrc: executed by bash(1) for non-login shells.
+
+# Note: PS1 and umask are already set in /etc/profile.
+
+# If not running interactively, don't do anything
+[ "$PS1" ] || return
+
+# If colors are enabled, then use those for utilities
+if [ -z "$NO_COLOR" -a "$LS_COLORS" ] && ls --color -d . >/dev/null 2>&1; then
+	alias ls='ls -F --color=auto'
+	alias dir='dir --color=auto'
+	alias vdir='vdir --color=auto'
+	alias grep='grep --color=auto'
+	alias fgrep='fgrep --color=auto'
+	alias egrep='egrep --color=auto'
+fi
