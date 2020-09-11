@@ -27,11 +27,21 @@ shopt -s checkwinsize
 # - check color support
 export NO_COLOR=yes
 case "$TERM" in
+	# Known no-color terminals
+	''|dumb|vt100|xterm|xterm-old) ;;
 	# TERM can indicate a color support
 	xterm-color|*-256color) unset NO_COLOR ;;
-	# If not, we can try to test with tput. If it works, assume color
-	# support is compliant with Ecma-48 (ISO/IEC-6429).
-	*) [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null && unset NO_COLOR ;;
+	# Try to detect
+	*)
+		if which infocmp >/dev/null && infocmp >&/dev/null; then
+			# Check terminfo database
+			{ infocmp | grep -qsF colors ; } && unset NO_COLOR
+		elif which tput >/dev/null; then
+			# If not, we can try to test with tput. If it works, assume color
+			# support is compliant with Ecma-48 (ISO/IEC-6429).
+			tput setaf 1 >&/dev/null && unset NO_COLOR
+		fi
+		;;
 esac
 
 # - red for root, green for normal user

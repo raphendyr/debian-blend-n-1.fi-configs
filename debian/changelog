@@ -1,3 +1,9 @@
+debian-blend-n-1.fi-configs (0.2) UNRELEASED; urgency=medium
+
+  * Better color support detection for bash
+
+ -- Jaakko Kantojärvi <jaakko@n-1.fi>  Fri, 11 Sep 2020 14:31:06 +0300
+
 debian-blend-n-1.fi-configs (0.1) testing; urgency=medium
 
   * Initial Release.
