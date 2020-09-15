@@ -24,6 +24,24 @@ Description: Debian Blend by n-1.fi - bash configuration
  meet basic expectations.
 
 
+Package: blend-n-1.fi-config-docker
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}
+Recommends:
+ docker-ce,
+ docker-compose (>= 1.21),
+Provides: ${diverted-files}
+Conflicts:
+ docker (<< 1.5~), docker.io,
+ ${diverted-files},
+Description: Debian Blend by n-1.fi - Docker archive
+ This package adds keyring and apt archive to downeload docker-ce.
+ .
+ Debian Pure Blend by n-1.fi is a subset of Debian designed to
+ meet basic expectations.
+
+
 Package: blend-n-1.fi-config-nano
 Architecture: all
 Multi-Arch: foreign

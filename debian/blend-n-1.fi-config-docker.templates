@@ -1,0 +1,6 @@
+Template: blend-n-1.fi-config-docker/repo-installed
+Type: note
+Description: Package docker-ce can now be installed
+ The docker APT repository is now configured, but APT lists are not
+ updated yet. Run `apt update` to do that. After that, you may install
+ Docker Community Edition with `apt install docker-ce`.

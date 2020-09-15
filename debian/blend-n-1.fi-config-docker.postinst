@@ -1,0 +1,25 @@
+#!/bin/sh
+
+set -e
+
+if [ "$1" = 'configure' -a -z "$2" ]; then
+	# NOTE: $2 on non-upgrade
+	if [ -f /usr/share/debconf/confmodule ] ; then
+		# NOTE: following line may exec current file again with a frontend
+		. /usr/share/debconf/confmodule
+
+		db_version 2.0
+		db_fset blend-n-1.fi-config-docker/repo-installed seen false || true
+		db_input high blend-n-1.fi-config-docker/repo-installed || true
+		db_go || true
+		db_stop || true
+	else
+		echo
+		echo 'The docker APT repository is now configured, but APT lists are not'
+		echo 'updated yet. Run `apt update` to do that. After that, you may install'
+		echo 'Docker Community Edition with `apt install docker-ce`.'
+		echo
+	fi
+fi
+
+#DEBHELPER#
