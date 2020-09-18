@@ -1,0 +1,5 @@
+# Set all packages from dl.google.com to the priority of backports/local packages.
+# This enables automatic updates, but doesn't override system packages.
+Package: *
+Pin: origin dl.google.com
+Pin-Priority: 100

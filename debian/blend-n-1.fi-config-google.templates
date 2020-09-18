@@ -1,0 +1,6 @@
+Template: blend-n-1.fi-config-google/repo-installed
+Type: note
+Description: Package google-chrome-stable can now be installed
+ The Google APT repository is now configured, but APT lists are not
+ updated yet. Run `apt update` to do that. After that, you may install
+ Google Chrome with `apt install google-chrome-stable`.
