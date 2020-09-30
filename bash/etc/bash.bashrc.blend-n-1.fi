@@ -22,57 +22,43 @@ shopt -s histappend
 shopt -s checkwinsize
 
 
-# define dynamic prompt
-
-# - check color support
+# check terminal color support
 export NO_COLOR=yes
 case "$TERM" in
-	# Known no-color terminals
-	''|dumb|vt100|xterm|xterm-old) ;;
-	# TERM can indicate a color support
-	xterm-color|*-256color) unset NO_COLOR ;;
-	# Try to detect
+	''|dumb|vt100|xterm|xterm-old)
+		# Known no-color terminals
+		;;
+	xterm-color|*-256color)
+		# TERM can indicate a color support
+		unset NO_COLOR
+		;;
 	*)
-		if which infocmp >/dev/null && infocmp >&/dev/null; then
-			# Check terminfo database
-			{ infocmp | grep -qsF colors ; } && unset NO_COLOR
-		elif which tput >/dev/null; then
-			# If not, we can try to test with tput. If it works, assume color
-			# support is compliant with Ecma-48 (ISO/IEC-6429).
-			tput setaf 1 >&/dev/null && unset NO_COLOR
+		# Try to detect
+		# 1) Check terminfo databas
+		# 2) If not, we can try to test with tput. If it works,
+		#    assume color support is compliant with Ecma-48 (ISO/IEC-6429).
+		if { which infocmp && infocmp && { infocmp | grep -qsF 'colors#' ; }; } >&/dev/null \
+			|| { which tput && tput setaf 1; } >&/dev/null
+		then
+			unset NO_COLOR
 		fi
 		;;
 esac
 
-# - red for root, green for normal user
+
+# define dynamic prompt
+PROMPT_DIRTRIM=4
+
+# - red for root, green for normal user, cyan for $PWD
 if [[ $NO_COLOR ]]; then
 	# $user @ $host :
-	__build_prompt_pre='\u@\h:'
-elif [[ $EUID == 0 ]]; then
+	__build_prompt_pre='\u@\h:\w'
+elif [[ $EUID = 0 ]]; then
 	# red $host res :
-	__build_prompt_pre='\[\e[0;31m\]\h\[\e[0m\]:'
+	__build_prompt_pre='\[\e[0;31m\]\h\[\e[0m\]:\[\e[0;36m\]\w\[\e[0m\]'
 else
 	# green $user res @ green $host res :
-	__build_prompt_pre='\[\e[0;32m\]\u\[\e[0m\]@\[\e[0;32m\]\h\[\e[0m\]:'
-fi
-
-# - shorten SPWD
-if which spwd >/dev/null; then
-	if [[ $NO_COLOR ]]; then
-		__build_prompt_init() { PS1="$__build_prompt_pre$(spwd)"; }
-	else
-		# $ps1 cyan $(spwd) res
-		__build_prompt_init() { PS1="$__build_prompt_pre\[\e[0;36m\]$(spwd)\[\e[0m\]"; }
-	fi
-else
-	if [[ $NO_COLOR ]]; then
-		__build_prompt_pre+='\w'
-	else
-		# $ps1 cyan $PWD res
-		__build_prompt_pre+='\[\e[0;36m\]\w\[\e[0m\]'
-	fi
-	__build_prompt_init() { PS1=$__build_prompt_pre; }
-	PROMPT_DIRTRIM=4
+	__build_prompt_pre='\[\e[0;32m\]\u\[\e[0m\]@\[\e[0;32m\]\h\[\e[0m\]:\[\e[0;36m\]\w\[\e[0m\]'
 fi
 
 # - add debian_chroot
@@ -90,14 +76,14 @@ fi
 if [[ $NO_COLOR ]]; then
 	__build_prompt() {
 		local _exit=$? # store exit code of the last command
-		__build_prompt_init
+		PS1=$__build_prompt_pre
 		[[ $_exit != 0 ]] && PS1+=" $_exit "
 		PS1+='\$ '
 	}
 else
 	__build_prompt() {
 		local _exit=$? # store exit code of the last command
-		__build_prompt_init
+		PS1=$__build_prompt_pre
 		# $PS1 light-red $? res
 		[[ $_exit != 0 ]] && PS1+=" \[\e[01;31m\]$_exit\[\e[0m\] "
 		PS1+='\$ '
@@ -105,8 +91,8 @@ else
 fi
 
 # - add the "hook"
-[[ "$PROMPT_COMMAND" = "${PROMPT_COMMAND#*__build_prompt}" ]] \
-	&& PROMPT_COMMAND="__build_prompt${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
+[[ $PROMPT_COMMAND == *'__build_prompt'* ]] \
+	|| PROMPT_COMMAND="__build_prompt${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
 
 # PS2..PS4
 if [[ $NO_COLOR ]]; then
