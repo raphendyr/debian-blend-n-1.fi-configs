@@ -4,6 +4,7 @@ debian-blend-n-1.fi-configs (0.2) UNRELEASED; urgency=medium
   * Add docker archive configuration
   * Add google archive configuration
   * Add title update logic to bashrc
+  * Disable nano features not available in stable
 
  -- Jaakko Kantojärvi <jaakko@n-1.fi>  Fri, 11 Sep 2020 14:31:06 +0300
 

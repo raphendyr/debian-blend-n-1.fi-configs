@@ -59,8 +59,7 @@ Description: Debian Blend by n-1.fi - Google archive
 Package: blend-n-1.fi-config-nano
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}
-Suggests: nano
+Depends: ${misc:Depends}, nano (>= 3.2)
 Provides: ${diverted-files}
 Conflicts: ${diverted-files}
 Description: Debian Blend by n-1.fi - nano configuration
