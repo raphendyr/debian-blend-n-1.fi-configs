@@ -1,4 +1,4 @@
-debian-blend-n-1.fi-configs (0.2) UNRELEASED; urgency=medium
+debian-blend-n-1.fi-configs (0.2) testing; urgency=medium
 
   * Better color support detection for bash
   * Add docker archive configuration
@@ -6,7 +6,7 @@ debian-blend-n-1.fi-configs (0.2) UNRELEASED; urgency=medium
   * Add title update logic to bashrc
   * Disable nano features not available in stable
 
- -- Jaakko Kantojärvi <jaakko@n-1.fi>  Fri, 11 Sep 2020 14:31:06 +0300
+ -- Jaakko Kantojärvi <jaakko@n-1.fi>  Mon, 26 Oct 2020 16:10:12 +0200
 
 debian-blend-n-1.fi-configs (0.1) testing; urgency=medium
 
