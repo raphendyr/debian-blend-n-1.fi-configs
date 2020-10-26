@@ -2,7 +2,7 @@ Source: debian-blend-n-1.fi-configs
 Section: misc
 Priority: optional
 Maintainer: Jaakko Kantojärvi <jaakko@n-1.fi>
-Build-Depends: debhelper (>= 12),
+Build-Depends: debhelper-compat (= 12),
                config-package-dev (>= 5.5)
 Rules-Requires-Root: no
 Standards-Version: 4.5.0
@@ -27,10 +27,10 @@ Description: Debian Blend by n-1.fi - bash configuration
 Package: blend-n-1.fi-config-docker
 Architecture: all
 Multi-Arch: foreign
+Pre-Depends: ${misc:Pre-Depends}
 Depends: ${misc:Depends}
 Recommends:
  docker-ce,
- docker-compose (>= 1.21),
 Provides: ${diverted-files}
 Conflicts:
  docker (<< 1.5~), docker.io,
@@ -44,6 +44,7 @@ Description: Debian Blend by n-1.fi - Docker archive
 
 Package: blend-n-1.fi-config-google
 Architecture: amd64
+Pre-Depends: ${misc:Pre-Depends}
 Depends: ${misc:Depends}
 Recommends:
  google-chrome-stable,
