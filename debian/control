@@ -57,6 +57,22 @@ Description: Debian Blend by n-1.fi - Google archive
  meet basic expectations.
 
 
+Package: blend-n-1.fi-config-heroku
+Architecture: all
+Multi-Arch: foreign
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${misc:Depends}
+Recommends:
+ heroku,
+Provides: ${diverted-files}
+Conflicts: ${diverted-files}
+Description: Debian Blend by n-1.fi - Heroku archive
+ This package adds keyring and apt archive to downeload heroku.
+ .
+ Debian Pure Blend by n-1.fi is a subset of Debian designed to
+ meet basic expectations.
+
+
 Package: blend-n-1.fi-config-nano
 Architecture: all
 Multi-Arch: foreign

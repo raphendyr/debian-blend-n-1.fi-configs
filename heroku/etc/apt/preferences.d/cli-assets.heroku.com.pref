@@ -1,0 +1,5 @@
+# Set all packages from cli-assets.heroku.com to the priority of backports/local packages.
+# This enables automatic updates, but doesn't override system packages.
+Package: *
+Pin: origin cli-assets.heroku.com
+Pin-Priority: 100

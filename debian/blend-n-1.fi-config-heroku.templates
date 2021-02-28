@@ -1,0 +1,6 @@
+Template: blend-n-1.fi-config-heroku/repo-installed
+Type: note
+Description: Package heroku can now be installed
+ The heroku APT repository is now configured, but APT lists are not
+ updated yet. Run `apt update` to do that. After that, you may install
+ heroku with `apt install heroku`.

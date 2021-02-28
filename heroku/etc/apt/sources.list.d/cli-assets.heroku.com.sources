@@ -1,0 +1,5 @@
+Types: deb
+Arch: amd64
+URIs: https://cli-assets.heroku.com/apt
+Suites: ./
+Signed-By: /usr/share/keyrings/cli-assets.heroku.com-archive-keyring.gpg
