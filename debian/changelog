@@ -1,8 +1,9 @@
-debian-blend-n-1.fi-configs (0.3) UNRELEASED; urgency=medium
+debian-blend-n-1.fi-configs (0.3) testing; urgency=medium
 
   * Add heroku archive configuration
+  * Replace use of `which` in bash with `command -v`
 
- -- Jaakko Kantojärvi <jaakko@n-1.fi>  Sun, 28 Feb 2021 07:01:45 +0200
+ -- Jaakko Kantojärvi <jaakko@n-1.fi>  Sun, 02 Jan 2022 16:21:25 +0200
 
 debian-blend-n-1.fi-configs (0.2) testing; urgency=medium
 
