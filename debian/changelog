@@ -1,9 +1,9 @@
-debian-blend-n-1.fi-configs (0.4) UNRELEASED; urgency=medium
+debian-blend-n-1.fi-configs (0.4) testing; urgency=medium
 
   * Update key for heroku archive
   * Update key for google archive
 
- -- Jaakko Kantojärvi <jaakko@n-1.fi>  Mon, 02 May 2022 18:27:40 +0300
+ -- Jaakko Kantojärvi <jaakko@n-1.fi>  Mon, 11 Jul 2022 18:25:47 +0300
 
 debian-blend-n-1.fi-configs (0.3) testing; urgency=medium
 
