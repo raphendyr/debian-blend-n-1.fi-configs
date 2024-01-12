@@ -46,66 +46,6 @@ case "$TERM" in
 esac
 
 
-# define dynamic prompt
-PROMPT_DIRTRIM=4
-
-# - red for root, green for normal user, cyan for $PWD
-if [[ $NO_COLOR ]]; then
-	# $user @ $host :
-	__build_prompt_pre='\u@\h:\w'
-elif [[ $EUID = 0 ]]; then
-	# red $host res :
-	__build_prompt_pre='\[\e[0;31m\]\h\[\e[0m\]:\[\e[0;36m\]\w\[\e[0m\]'
-else
-	# green $user res @ green $host res :
-	__build_prompt_pre='\[\e[0;32m\]\u\[\e[0m\]@\[\e[0;32m\]\h\[\e[0m\]:\[\e[0;36m\]\w\[\e[0m\]'
-fi
-
-# - add debian_chroot
-if [ -r "/etc/debian_chroot" -a -s "/etc/debian_chroot" ]; then
-	if [[ $NO_COLOR ]]; then
-		# ( $/etc/debian_chroot_chroot ) $ps1
-		__build_prompt_pre="($(cat /etc/debian_chroot))$__build_prompt_pre"
-	else
-		# yellow ( $/etc/debian_chroot_chroot ) res $ps1
-		__build_prompt_pre="(\[\e[0;33m\]$(cat /etc/debian_chroot)\[\e[0m\])$__build_prompt_pre"
-	fi
-fi
-
-# - handle exit code
-if [[ $NO_COLOR ]]; then
-	__build_prompt() {
-		local _exit=$? # store exit code of the last command
-		PS1=$__build_prompt_pre
-		[[ $_exit != 0 ]] && PS1+=" $_exit "
-		PS1+='\$ '
-	}
-else
-	__build_prompt() {
-		local _exit=$? # store exit code of the last command
-		PS1=$__build_prompt_pre
-		# $PS1 light-red $? res
-		[[ $_exit != 0 ]] && PS1+=" \[\e[01;31m\]$_exit\[\e[0m\] "
-		PS1+='\$ '
-	}
-fi
-
-# - add the "hook"
-[[ $PROMPT_COMMAND == *'__build_prompt'* ]] \
-	|| PROMPT_COMMAND="__build_prompt${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
-
-# PS2..PS4
-if [[ $NO_COLOR ]]; then
-	PS2='> '
-	PS3='?# '
-	PS4='+ '
-else
-	PS2='\[\e[01;35m\]>\[\e[0m\] ' # magenta > res
-	PS3='\[\e[01;35m\]?\[\e[0m\]# ' # magenta ? res #
-	PS4='\[\e[01;30m\]+\[\e[0m\] ' # light-black + res
-fi
-
-
 # update title of the terminal
 if [[ $SSH_TTY ]]; then
 	__PROMPT_TITLE='\u@\H \w'
@@ -140,13 +80,19 @@ case "$TERM" in
 		# OSC 30: Set tab text in Konsole (non-standard)
 		# command: ESC ] <id> ; <data> BEL
 		__update_title() {
+			local _exit=$?
 			printf "\033]0;%s\007" "${__PROMPT_TITLE@P}"
 			printf "\033]30;%s\007" "${__PROMPT_TAB@P}"
+			return $_exit
 		}
 		;;
 	screen*)
 		# ESC k ... ESC \
-		__update_title() { printf "\033k%s\033\134" "${__PROMPT_TITLE@P}"; }
+		__update_title() {
+			local _exit=$?
+			printf "\033k%s\033\134" "${__PROMPT_TITLE@P}"
+			return $_exit
+		}
 		;;
 esac
 
@@ -157,19 +103,88 @@ then
 fi
 
 
+# define dynamic prompt
+PROMPT_DIRTRIM=4
+
+# - red for root, green for normal user, cyan for $PWD
+if [[ $NO_COLOR ]]; then
+	# $user @ $host :
+	__build_prompt_pre='\u@\h:\w'
+elif [[ $EUID = 0 ]]; then
+	# red $host res :
+	__build_prompt_pre='\[\e[0;31m\]\h\[\e[0m\]:\[\e[0;36m\]\w\[\e[0m\]'
+else
+	# green $user res @ green $host res :
+	__build_prompt_pre='\[\e[0;32m\]\u\[\e[0m\]@\[\e[0;32m\]\h\[\e[0m\]:\[\e[0;36m\]\w\[\e[0m\]'
+fi
+
+# - add debian_chroot
+if [[ -r "/etc/debian_chroot" && -s "/etc/debian_chroot" ]]; then
+	if [[ $NO_COLOR ]]; then
+		# ( $/etc/debian_chroot_chroot ) $ps1
+		__build_prompt_pre="($(cat /etc/debian_chroot))$__build_prompt_pre"
+	else
+		# yellow ( $/etc/debian_chroot_chroot ) res $ps1
+		__build_prompt_pre="(\[\e[0;33m\]$(cat /etc/debian_chroot)\[\e[0m\])$__build_prompt_pre"
+	fi
+fi
+
+# - handle exit code
+if [[ $NO_COLOR ]]; then
+	__build_prompt() {
+		local _exit=$? # store exit code of the last command
+		PS1=$__build_prompt_pre
+		if [[ $_exit != 0 ]]; then
+			PS1+=" $_exit "
+		fi
+		PS1+='\$ '
+		return $_exit
+	}
+else
+	__build_prompt() {
+		local _exit=$? # store exit code of the last command
+		PS1=$__build_prompt_pre
+		# $PS1 light-red $? res
+		if [[ $_exit != 0 ]]; then
+			PS1+=" \[\e[01;31m\]$_exit\[\e[0m\] "
+		fi
+		PS1+='\$ '
+		return $_exit
+	}
+fi
+
+# - add the "hook"
+if [[ $PROMPT_COMMAND != *'__build_prompt'* ]]; then
+	PROMPT_COMMAND="__build_prompt${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
+fi
+
+# PS2..PS4
+if [[ $NO_COLOR ]]; then
+	PS2='> '
+	PS3='?# '
+	PS4='+ '
+else
+	PS2='\[\e[01;35m\]>\[\e[0m\] ' # magenta > res
+	PS3='\[\e[01;35m\]?\[\e[0m\]# ' # magenta ? res #
+	PS4='\[\e[01;30m\]+\[\e[0m\] ' # light-black + res
+fi
+
+
 # dircolors
 if ! [[ $NO_COLOR ]] && command -v dircolors >/dev/null; then
-	[ -r "$HOME/.dircolors" ] \
-		&& eval "$(dircolors -b "$HOME/.dircolors")" \
-		|| eval "$(dircolors -b)"
+	if [[ -r "$HOME/.dircolors" ]]; then
+		eval "$(dircolors -b "$HOME/.dircolors")"
+	else
+		eval "$(dircolors -b)"
+	fi
 	alias ls='ls --color=auto'
 fi
 
 
 # aliases
-if [ -r "$HOME/.bash_aliases" ]; then
+if [[ -r "$HOME/.bash_aliases" ]]; then
 	. "$HOME/.bash_aliases"
-elif [ -r "$HOME/.aliases" ]; then
+elif [[ -r "$HOME/.aliases" ]]; then
 	. "$HOME/.aliases"
 fi
 

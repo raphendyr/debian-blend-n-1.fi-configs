@@ -1,3 +1,9 @@
+debian-blend-n-1.fi-configs (0.5) UNRELEASED; urgency=medium
+
+  * Fix exit code handling in dynamic Bash prompt
+
+ -- Jaakko Kantojärvi <jaakko@n-1.fi>  Fri, 12 Jan 2024 03:22:17 +0200
+
 debian-blend-n-1.fi-configs (0.4.1) testing; urgency=medium
 
   * Reupload
