@@ -1,6 +1,6 @@
 Types: deb
 Arch: amd64
 URIs: https://download.docker.com/linux/debian
-Suites: buster
+Suites: bookworm
 Components: stable
-Signed-By: /usr/share/keyrings/download.docker.com-archive-keyring.gpg
+Signed-By: /usr/share/keyrings/download.docker.com-archive-keyring.asc
