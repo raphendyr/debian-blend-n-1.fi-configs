@@ -1,0 +1,6 @@
+Template: blend-n-1.fi-config-vscode/repo-installed
+Type: note
+Description: Package code can now be installed
+ The Micosoft VSCode APT repository is now configured, but APT lists are not
+ updated yet. Run `apt update` to do that. After that, you may install
+ Visual Studio Code with `apt install code`.

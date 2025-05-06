@@ -1,0 +1,5 @@
+# Set all packages from packages.microsoft.com to the priority of backports/local packages.
+# This enables automatic updates, but doesn't override system packages.
+Package: *
+Pin: origin packages.microsoft.com
+Pin-Priority: 100

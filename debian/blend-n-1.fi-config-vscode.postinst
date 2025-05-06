@@ -1,0 +1,31 @@
+#!/bin/sh
+
+set -e
+
+if [ "$1" = 'configure' ] && [ -z "$2" ]; then
+	# NOTE: $2 on non-upgrade
+
+	if [ ! "${DEBIAN_HAS_FRONTEND:-}" ]; then
+		# Disable packages own apt injection. The repo is managed by this meta package.
+		echo "code code/add-microsoft-repo boolean false" | sudo debconf-set-selections
+	fi
+
+	if [ -f /usr/share/debconf/confmodule ] ; then
+		# NOTE: following line may exec current file again with a frontend
+		. /usr/share/debconf/confmodule
+
+		db_version 2.0
+		db_fset blend-n-1.fi-config-vscode/repo-installed seen false || true
+		db_input high blend-n-1.fi-config-vscode/repo-installed || true
+		db_go || true
+		db_stop || true
+	else
+		echo
+		echo 'The code APT repository is now configured, but APT lists are not'
+		echo 'updated yet. Run `apt update` to do that. After that, you may install'
+		echo 'Visual Studio Code with `apt install code'
+		echo
+	fi
+fi
+
+#DEBHELPER#

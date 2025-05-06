@@ -1,0 +1,6 @@
+Types: deb
+URIs: https://packages.microsoft.com/repos/code
+Suites: stable
+Components: main
+Arch: amd64 arm64 armhf
+Signed-By: /usr/share/keyrings/packages.microsoft.asc
