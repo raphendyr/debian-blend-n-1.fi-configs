@@ -1,6 +1,7 @@
 debian-blend-n-1.fi-configs (0.8) testing; urgency=medium
 
   * Add vscode archive configuration
+  * Fix shellcheck warning in postinst scripts
 
  -- Jaakko Kantojärvi <jaakko@n-1.fi>  Wed, 07 May 2025 03:48:33 +0300
 

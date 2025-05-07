@@ -2,7 +2,7 @@
 
 set -e
 
-if [ "$1" = 'configure' -a -z "$2" ]; then
+if [ "$1" = 'configure' ] && [ -z "$2" ]; then
 	# NOTE: $2 on non-upgrade
 	if [ -f /usr/share/debconf/confmodule ] ; then
 		# NOTE: following line may exec current file again with a frontend
