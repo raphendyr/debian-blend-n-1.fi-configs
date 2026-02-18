@@ -2,8 +2,7 @@ Source: debian-blend-n-1.fi-configs
 Section: misc
 Priority: optional
 Maintainer: Jaakko Kantojärvi <jaakko@n-1.fi>
-Build-Depends: debhelper-compat (= 12),
-               config-package-dev (>= 5.5)
+Build-Depends: config-package-dev (>= 5.5)
 Rules-Requires-Root: no
 Standards-Version: 4.5.0
 Homepage: https://github.com/raphendyr/debian-blend-n-1.fi-configs
